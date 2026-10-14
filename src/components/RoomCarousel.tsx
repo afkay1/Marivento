@@ -21,8 +21,11 @@ export default function RoomCarousel({ exclude }: { exclude?: string }) {
       </div>
       <div
         ref={track}
-        data-lenis-prevent-wheel
         className="no-scrollbar flex cursor-grab snap-x snap-mandatory gap-5 overflow-x-auto px-[var(--pad)] pb-4 active:cursor-grabbing"
+        onWheel={(e) => {
+          // Trackpad sideways swipes scroll the carousel; vertical wheel keeps scrolling the page.
+          if (track.current && Math.abs(e.deltaX) > Math.abs(e.deltaY)) track.current.scrollLeft += e.deltaX;
+        }}
         onPointerDown={(e) => {
           if (e.pointerType !== "mouse" || !track.current) return;
           drag.current = { x: e.clientX, left: track.current.scrollLeft, moved: false };
